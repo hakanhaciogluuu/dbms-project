@@ -37,6 +37,8 @@ class Category(models.Model):
          super().save(*args, **kwargs)
 
 
+
+
 class Urun(models.Model):
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -47,7 +49,6 @@ class Urun(models.Model):
     slug = models.SlugField(null=False, blank=True, unique=True, db_index=True,editable=False)
     available = models.BooleanField(default=True)
     stok = models.PositiveIntegerField()
-    image = models.ImageField(upload_to="urunler")
     fiyat = MoneyField(max_digits=10, default_currency='TL')
     barkod = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -59,8 +60,10 @@ class Urun(models.Model):
          super().save(*args, **kwargs)
 
 
-#ÜRÜN -> urunId, temaId, kategoriId, isim, stok, fiyat, barkod, renk, beden,
 
 class UrunFotograf(models.Model):
-    urun = models.ForeignKey(Urun, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products', blank=True)
+    urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
+    image = models.ImageField(upload_to="urunler")
+
+
+#ÜRÜN -> urunId, temaId, kategoriId, isim, stok, fiyat, barkod, renk, beden,
