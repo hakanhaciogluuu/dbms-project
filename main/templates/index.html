@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Home
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% for category in categories %}
+
+        <h1>{{ category.name }}</h1>
+
+{% endfor %}
+
+HOŞGELDİNİZ
+
+{% endblock %}
