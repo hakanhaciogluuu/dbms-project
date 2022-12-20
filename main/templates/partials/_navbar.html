@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#"><h1>Zara</h1></a>
+    <div class="container mt-3">
+      <a class="navbar-brand" href="{% url 'home' %}"><h1>Zara</h1></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -59,10 +59,16 @@
               Hesap
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              {% if user.is_authenticated %}
+              <li><a class="dropdown-item" href="#">Favoriler</a></li>
+              <li><a class="dropdown-item" href="#">Siparişler</a></li> 
+              <li><a class="dropdown-item" href="#">Adresler</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+              <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+              <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+              {% endif %}
             </ul>
           </li>
         </ul>
