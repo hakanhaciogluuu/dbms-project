@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
-from main.models import Category, Urun
+from main.models import Category, Urun, UrunFotograf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
@@ -79,6 +79,7 @@ def index(request):
 def urunler(request, slug):
     context = {
         "urunler": Urun.objects.filter(category__slug = slug),
+        "fotograflar": UrunFotograf.objects.all(),
         "categories" : Category.objects.all()
     }
     return render(request,"urunler.html", context)

@@ -13,9 +13,12 @@
 
 
 {% for urun in urunler %}
-
 <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="{{ urun.image.url }}" alt="Card image cap">
+  {% if fotograflar.urun == urun %}
+    {% for image in  fotograflar %}
+      <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
+    {% endfor %}
+  {% endif %}
     <div class="card-body">
       <h5 class="card-title">{{ urun.name }}</h5>
       <p class="card-text">{{ urun.aciklama }}</p>
@@ -23,7 +26,6 @@
     </div>
   </div>
 
-        <h1>{{ urun.name }}</h1>
 
 {% endfor %}
 

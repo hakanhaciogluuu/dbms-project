@@ -59,10 +59,14 @@ class Urun(models.Model):
          self.slug = slugify(self.name)
          super().save(*args, **kwargs)
 
+    @property
+    def get_images(self):
+        return self.images.all()
+
 
 
 class UrunFotograf(models.Model):
-    urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
+    urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1, related_name='images')
     image = models.ImageField(upload_to="urunler")
 
 
