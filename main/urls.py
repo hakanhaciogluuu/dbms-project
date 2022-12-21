@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name= "home"),
     path("category/<slug:slug>", views.urunler, name= "urunler"),
+    path("urun/<slug:slug>", views.urun_detay, name="urun_detay"),
     #####account
     path("login", views.login_request, name= "login"),
     path("register", views.register_request, name= "register"),

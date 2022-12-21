@@ -101,3 +101,11 @@ def urunler(request, slug):
         "categories" : Category.objects.all()
     }
     return render(request,"urunler.html", context)
+
+
+def urun_detay(request , slug):
+    urun = Urun.objects.get(slug=slug)
+    return render(request,"urun_detay.html",{
+        "urun" : urun,
+        "categories" : Category.objects.all()
+    })
