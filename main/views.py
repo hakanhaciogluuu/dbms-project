@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from main.models import Category, Urun, UrunFotograf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 # Create your views here.
 
@@ -62,6 +63,23 @@ def logout_request(request):
     return redirect("home")
 
 
+#Search
+
+
+def search_product(request):
+
+    if request.method == "POST":
+        search = request.POST['search']
+        categories = Category.objects.all()
+        urunler = Urun.objects.filter(Q(name__contains=search) | Q(barkod__contains = search))
+        context = {
+            "categories" : categories,
+            'search' : search,
+            'urunler' : urunler
+        }
+        return render(request, "search.html" ,context)
+    else:
+        return render(request, "search.html" ,context)
 
 
 

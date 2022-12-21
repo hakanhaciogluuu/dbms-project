@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Home
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{%if search %}
+
+<h1> bunu mu aradın : {{ search }} </h1>
+{% else %}
+<h1> ne arıyosun anlamadım</h1>
+
+{% endif %}
+
+{% for urun in urunler %}
+<div class="card" style="width: 18rem;">
+  {% if fotograflar.urun == urun %}
+    {% for image in  fotograflar %}
+      <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
+    {% endfor %}
+  {% endif %}
+    <div class="card-body">
+      <h5 class="card-title">{{ urun.name }}</h5>
+      <p class="card-text">{{ urun.aciklama }}</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+
+
+{% endfor %}
+
+
+
+
+{% endblock %}
