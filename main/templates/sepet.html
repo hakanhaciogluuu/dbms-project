@@ -22,13 +22,6 @@
 
 {% endif %}
 
-{% if sepet|length == 0 %}
-
-<h5>Sepetiniz Boş</h5>
-
-
-{% endif %}
-
 {% for  rs in sepet  %}
 <div class="card mb-3">
     <div class="card-body">
@@ -62,5 +55,15 @@
 
 
   {% endfor %}
+
+  {% if sepet|length == 0 %}
+
+  <h5>Sepetiniz Boş</h5>
+
+  {% else %}
   <h5>Toplam tutar = {{total}}</h5>
+
+  {% endif %}
+  
+  
 {% endblock %}

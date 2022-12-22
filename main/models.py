@@ -92,3 +92,4 @@ class SepetForm(ModelForm):
     class Meta:
         model = Sepet
         fields = ['miktar']
+

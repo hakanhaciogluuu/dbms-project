@@ -13,7 +13,7 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for category in categories %}
                     {% if category.tema.slug == "kadn" %}
-                    <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h2>{{ category.name }}</h2></a></li>
+                    <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h5>{{ category.name }}</h5></a></li>
                     {% endif %}
                   {% endfor %}
                 </ul>
@@ -25,7 +25,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for category in categories %}
               {% if category.tema.slug == "erkek" %}
-              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h2>{{ category.name }}</h2></a></li>
+              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h5>{{ category.name }}</h5></a></li>
               {% endif %}
             {% endfor %}
             </ul>
@@ -37,7 +37,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for category in categories %}
               {% if category.tema.slug == "cocuk" %}
-              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h2>{{ category.name }}</h2></a></li>
+              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h5>{{ category.name }}</h5></a></li>
               {% endif %}
             {% endfor %}
             </ul>
@@ -49,7 +49,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for category in categories %}
               {% if category.tema.slug == "guzellik" %}
-              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h2>{{ category.name }}</h2></a></li>
+              <li><a class="dropdown-item" href="{% url 'urunler' category.slug %}"><h5>{{ category.name }}</h5></a></li>
               {% endif %}
             {% endfor %}
             </ul>
@@ -62,18 +62,19 @@
               {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url 'sepet' %}">
                 {% if request.session.sepet_urunler == 0  %}
-                Sepet
+                <h5>Sepet</h5>
                 {% else %}
-                Sepet - {{ request.session.sepet_urunler }}
+                <h5>Sepet - {{ request.session.sepet_urunler }}</h5>
                 {% endif %}
               </a></li>
-              <li><a class="dropdown-item" href="#">Siparişler</a></li> 
-              <li><a class="dropdown-item" href="#">Adresler</a></li>
+              <li><a class="dropdown-item" href="#"><h5>Favoriler</h5></a></li>
+              <li><a class="dropdown-item" href="#"><h5>Siparişler</h5></a></li> 
+              <li><a class="dropdown-item" href="#"><h5>Adresler</h5></a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}"><h5>Logout</h5></a></li>
               {% else %}
-              <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-              <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+              <li><a class="dropdown-item" href="{% url 'login' %}"><h5>Login</h5></a></li>
+              <li><a class="dropdown-item" href="{% url 'register' %}"><h5>Register</h5></a></li>
               {% endif %}
             </ul>
           </li>
