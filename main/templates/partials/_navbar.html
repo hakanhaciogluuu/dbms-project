@@ -60,7 +60,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% if user.is_authenticated %}
-              <li><a class="dropdown-item" href="#">Favoriler</a></li>
+              <li><a class="dropdown-item" href="{% url 'sepet' %}">Sepet</a></li>
               <li><a class="dropdown-item" href="#">Siparişler</a></li> 
               <li><a class="dropdown-item" href="#">Adresler</a></li>
               <li><hr class="dropdown-divider"></li>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf
+from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet
 
 class UrunFotografAdmin(admin.StackedInline):
     model = UrunFotograf
@@ -21,6 +21,9 @@ class UrunAdmin(admin.ModelAdmin):
     class Meta:
         model = Urun
 
+class SepetAdmin(admin.ModelAdmin):
+    list_display = ['user', 'urun', 'miktar', 'amount']
+    list_filter = ['user']
 
 
 
@@ -30,5 +33,6 @@ admin.site.register(Beden)
 admin.site.register(Tema, TemaAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Urun,UrunAdmin)
+admin.site.register(Sepet,SepetAdmin)
 
 # Register your models here.

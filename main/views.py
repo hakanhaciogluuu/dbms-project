@@ -1,9 +1,11 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from main.models import Category, Urun, UrunFotograf
+from main.models import Category, Urun, UrunFotograf, SepetForm, Sepet
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -109,3 +111,57 @@ def urun_detay(request , slug):
         "urun" : urun,
         "categories" : Category.objects.all()
     })
+
+
+
+
+
+
+
+
+def sepet(request):
+    categories = Category.objects.all()
+    user = request.user
+    sepet = Sepet.objects.filter(user_id = user.id)
+    total = 0
+
+    for rs in sepet:
+        total += rs.urun.fiyat * rs.miktar
+
+    context = {
+        'sepet':sepet,
+        'categories': categories,
+        'total': total
+    }
+    
+    return render(request, 'sepet.html',context)
+
+
+@login_required(login_url='/login')
+def sepete_ekle(request, id):
+    url = request.META.get('HTTP_REFERER')
+    current_user = request.user
+
+    urunkontrol = Sepet.objects.filter(urun_id = id)
+    if request.method == 'POST':
+        form = SepetForm(request.POST)
+        if form.is_valid():
+            if urunkontrol:
+                data = Sepet.objects.get(urun_id =id)
+                data.miktar += form.cleaned_data['miktar']
+                data.save()
+            else:
+                data = Sepet()
+                data.user_id = current_user.id
+                data.urun_id = id
+                data.miktar = form.cleaned_data['miktar']
+                data.save()
+            messages.success(request, "Ürün sepete eklendi.")
+            return HttpResponseRedirect(url)
+
+
+@login_required(login_url='/login')
+def sepetten_sil(request, id):
+    Sepet.objects.filter(id=id).delete()
+    messages.success(request, 'Ürün Sepetten Silinmiştir.')
+    return HttpResponseRedirect("/sepet")

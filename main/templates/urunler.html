@@ -14,7 +14,7 @@
 
 {% for urun in urunler %}
 <div class="card" style="width: 18rem;">
-    {% for image in  urun.get_images %}
+    {% for image in  urun.get_images|slice:":1" %}
       <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
     {% endfor %}
     <div class="card-body">

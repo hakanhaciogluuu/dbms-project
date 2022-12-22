@@ -10,21 +10,45 @@
 
 
 {% block content %}
+{% if messages %}
+
+<ul class="messages">
+  {% for message in messages  %}
+  <div class="alert alert-primary" role="alert">
+    {{message}}
+  </div>
+  {% endfor %}
+</ul>
+
+{% endif %}
 
 
 <div class="card" style="width: 18rem;">
-  {% if fotograflar.urun == urun %}
-    {% for image in  fotograflar %}
+  <div class="card" style="width: 18rem;">
+    {% for image in  urun.get_images|slice:":1" %}
       <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
     {% endfor %}
-  {% endif %}
     <div class="card-body">
-      <h5 class="card-title">{{ urun.name }}</h5>
+      <h5 class="card-title">
+        <a href="{% url 'urun_detay' urun.slug %}">
+        {{urun.name}}
+      </a></h5>
       <p class="card-text">{{ urun.aciklama }}</p>
       <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
   </div>
 
-HOŞGELDİNİZ
+  <div class="container mt-3">
+    <div class="col">
+        <form action="/sepete_ekle/{{urun.id}}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="miktar" class="form-label">Miktar</label>
+                <input min = "0" max = "{{urun.stok}}"type="number" class="form-control" name="miktar">
+            </div>
+            <input type="submit" value="Sepete Ekle" class="btn btn-primary add-to-cart">
+        </form>
+    </div>
+</div>
 
 {% endblock %}

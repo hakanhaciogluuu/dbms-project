@@ -1,6 +1,8 @@
 from django.db import models
+from django.forms import ModelForm
 from django.utils.text import slugify
 from djmoney.models.fields import MoneyField
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -70,4 +72,23 @@ class UrunFotograf(models.Model):
     image = models.ImageField(upload_to="urunler")
 
 
-#ÜRÜN -> urunId, temaId, kategoriId, isim, stok, fiyat, barkod, renk, beden,
+class Sepet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    urun = models.ForeignKey(Urun, on_delete= models.SET_NULL, null=True)
+    miktar = models.IntegerField()
+
+    def __str__(self):
+        return self.urun
+
+    @property
+    def amount(self):
+        return(self.miktar * self.urun.fiyat)
+
+    @property
+    def fiyat(self):
+        return (self.urun.fiyat)
+
+class SepetForm(ModelForm):
+    class Meta:
+        model = Sepet
+        fields = ['miktar']

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Sepet
+{% endblock %}
+
+
+
+{% block content %}
+
+{% if messages %}
+
+<ul class="messages">
+  {% for message in messages  %}
+  <div class="alert alert-primary" role="alert">
+    {{message}}
+  </div>
+  {% endfor %}
+</ul>
+
+{% endif %}
+
+{% if sepet|length == 0 %}
+
+<h5>Sepetiniz Boş</h5>
+
+
+{% endif %}
+
+{% for  rs in sepet  %}
+<div class="card mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex flex-row align-items-center">
+          <div>
+            {% for image in  rs.urun.get_images|slice:":1" %}
+            <img class="card-img" src="{{ image.image.url }}" alt="Card image cap">
+            {% endfor %}
+          </div>
+          <div class="ms-3">
+            <h5><a href="{% url 'urun_detay' rs.urun.slug %}">
+              {{rs.urun.name}}
+            </a> </h5>
+            <p class="small mb-0">{{rs.urun.aciklama}}</p>
+          </div>
+        </div>
+        <div class="d-flex flex-row align-items-center">
+          <div style="width: 50px;">
+            <h5 class="fw-normal mb-0">{{rs.miktar}}</h5>
+          </div>
+          <div style="width: 80px;">
+            <h5 class="mb-0">{{rs.miktar}} * {{rs.fiyat}} = {{rs.amount}}</h5>
+          </div>
+          <a href="/sepetten_sil/{{rs.id}}"><input type="submit" value="Sil" class="btn btn-primary"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h5>Toplam tutar = {{total}}</h5>
+
+  {% endfor %}
+
+{% endblock %}
