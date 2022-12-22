@@ -53,14 +53,14 @@
           <div style="width: 80px;">
             <h5 class="mb-0">{{rs.miktar}} * {{rs.fiyat}} = {{rs.amount}}</h5>
           </div>
-          <a href="/sepetten_sil/{{rs.id}}"><input type="submit" value="Sil" class="btn btn-primary"></a>
+          <a href="/sepetten_sil/{{rs.id}}" onclick ="return confirm('Silmek istediğinizden emin misiniz?')"><input type="submit" value="Sil" class="btn btn-primary"></a>
         </div>
       </div>
     </div>
   </div>
 
-  <h5>Toplam tutar = {{total}}</h5>
+
 
   {% endfor %}
-
+  <h5>Toplam tutar = {{total}}</h5>
 {% endblock %}

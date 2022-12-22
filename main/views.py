@@ -91,6 +91,8 @@ def search_product(request):
 
 
 def index(request):
+    current_user = request.user
+    request.session['sepet_urunler'] = Sepet.objects.filter(user_id=current_user.id).count()
     context = {
         "categories" : Category.objects.all()
     }
@@ -156,12 +158,15 @@ def sepete_ekle(request, id):
                 data.urun_id = id
                 data.miktar = form.cleaned_data['miktar']
                 data.save()
+            request.session['sepet_urunler'] = Sepet.objects.filter(user_id=current_user.id).count()
             messages.success(request, "Ürün sepete eklendi.")
             return HttpResponseRedirect(url)
 
 
 @login_required(login_url='/login')
 def sepetten_sil(request, id):
+    current_user = request.user
     Sepet.objects.filter(id=id).delete()
+    request.session['sepet_urunler'] = Sepet.objects.filter(user_id=current_user.id).count()
     messages.success(request, 'Ürün Sepetten Silinmiştir.')
     return HttpResponseRedirect("/sepet")
