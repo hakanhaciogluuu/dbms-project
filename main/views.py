@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from main.models import Category, Urun, UrunFotograf, SepetForm, Sepet
+from main.models import Category, Urun, UrunFotograf, SepetForm, Sepet, Favoriler
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -116,11 +116,45 @@ def urun_detay(request , slug):
 
 
 
+@login_required(login_url='/login')
+def favoriler(request):
+    categories = Category.objects.all()
+    user = request.user
+    favoriler = Favoriler.objects.filter(user_id = user.id)
+
+
+    context = {
+        'favoriler':favoriler,
+        'categories': categories,
+    }
+    
+    return render(request, 'favoriler.html',context)
+
+@login_required(login_url='/login')
+def favorilere_ekle(request, id):
+    url = request.META.get('HTTP_REFERER')
+    current_user = request.user
+
+    urunkontrol = Favoriler.objects.filter(urun_id = id)
+    if urunkontrol:
+        messages.success(request, "Ürün zaten favorilerinde.")
+        return HttpResponseRedirect(url)
+    else:
+        if request.method == 'POST':
+            data = Favoriler()
+            data.user_id = current_user.id
+            data.urun_id = id
+            data.save()
+        messages.success(request, "Ürün favorilere eklendi.")
+        return HttpResponseRedirect(url)
 
 
 
 
 
+
+
+@login_required(login_url='/login')
 def sepet(request):
     categories = Category.objects.all()
     user = request.user

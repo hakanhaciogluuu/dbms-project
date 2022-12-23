@@ -27,9 +27,26 @@
     </div>
   </div>
 
+  <div class="flex-div" id="cards-section3" style="margin-top: 100px;">
+      <div class="flex-item-products">
+         {% for image in  urun.get_images|slice:":1" %}
+          <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
+         {% endfor %}
+          <div class="card-border">
+            <h4 style="margin-bottom: 0px;">
+              <a href="{% url 'urun_detay' urun.slug %}">
+                {{urun.name}}
+              </a>
+            </h4>
+            <p style="margin-bottom: 0px;"><span><del style="color: #78807b;">{{ urun.aciklama }}
+            </p>
+            <a href="#" class="btn btn-primary">Favorilere Ekle</a>
+          </div>
+      </div>
+    </div>
+
 
 {% endfor %}
 
-HOŞGELDİNİZ
 
 {% endblock %}

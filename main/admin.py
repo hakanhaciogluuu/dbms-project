@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler, Adres,YorumFotograf, Yorum
+from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler,Adres,YorumFotograf,Yorum,Favoriler
 
 class UrunFotografAdmin(admin.StackedInline):
     model = UrunFotograf
@@ -9,7 +9,7 @@ class YorumFotografAdmin(admin.StackedInline):
     model = YorumFotograf
 
 class YorumAdmin(admin.ModelAdmin):
-    list_display = ['urun', 'user', 'text']
+    list_display = ['yorum_urun', 'user', 'text']
     inlines = [YorumFotografAdmin]
     class Meta:
         model = Yorum
@@ -37,6 +37,9 @@ class SepetAdmin(admin.ModelAdmin):
 class AdresAdmin(admin.ModelAdmin):
     list_display = ['username', 'sehir', 'adres_adi', 'sehir_adi']
 
+class FavorilerAdmin(admin.ModelAdmin):
+    list_display = ['user', 'urun']
+
 
 class SehirlerAdmin(admin.ModelAdmin):
     list_display = ['sehir_adi'] 
@@ -50,5 +53,6 @@ admin.site.register(Yorum,YorumAdmin)
 admin.site.register(Sepet,SepetAdmin)
 admin.site.register(Adres, AdresAdmin)
 admin.site.register(Sehirler, SehirlerAdmin)
+admin.site.register(Favoriler, FavorilerAdmin)
 
 # Register your models here.

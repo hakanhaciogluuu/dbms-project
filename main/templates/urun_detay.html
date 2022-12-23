@@ -34,7 +34,13 @@
         {{urun.name}}
       </a></h5>
       <p class="card-text">{{ urun.aciklama }}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <form action="/favorilere_ekle/{{urun.id}}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <input type="submit" value="Favorilere_ekle" class="btn btn-primary">
+        </div>
+    </form>
+      
     </div>
   </div>
 

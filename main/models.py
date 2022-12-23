@@ -119,12 +119,12 @@ class Adres(models.Model):
 
 class Yorum(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    urun = models.ForeignKey(Urun, on_delete=models.CASCADE)
+    yorum_urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
     text = models.TextField(max_length=300)
 
     @property
-    def urun(self):
-        return(self.urun.name)
+    def urun_adi(self):
+        return(self.yorum_urun.name)
     
     @property
     def username(self):
@@ -138,3 +138,8 @@ class YorumFotograf(models.Model):
     @property
     def get_images(self):
         return self.images.all()
+
+
+class Favoriler(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)

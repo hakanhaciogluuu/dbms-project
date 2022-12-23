@@ -13,6 +13,8 @@ urlpatterns = [
     path("logout", views.logout_request, name= "logout"),
     path("search_product", views.search_product, name= "search_product"),
     path("sepet", views.sepet, name= "sepet"),
+    path("favoriler", views.favoriler, name= "favoriler"),
+    path('favorilere_ekle/<int:id>', views.favorilere_ekle, name='favorilere_ekle'),
     path('sepete_ekle/<int:id>', views.sepete_ekle, name='sepete_ekle'),
     path('sepetten_sil/<int:id>', views.sepetten_sil, name='sepetten_sil')
 ]

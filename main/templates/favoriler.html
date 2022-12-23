@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Home
+
+{% endblock %}
+
+
+
+{% block content %}
+<h1>Favoriler</h1>
+
+{% for favori in favoriler %}
+<div class="card" style="width: 18rem;">
+    {% for image in  favori.urun.get_images|slice:":1" %}
+      <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
+    {% endfor %}
+    <div class="card-body">
+      <h5 class="card-title">
+        <a href="{% url 'urun_detay' favori.urun.slug %}">
+        {{favori.urun.name}}
+      </a></h5>
+      <p class="card-text">{{ favori.urun.aciklama }}</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+
+
+{% endfor %}
+
+{% endblock %}
