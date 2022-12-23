@@ -1,6 +1,45 @@
 {% extends 'base.html' %}
 
 
+{% block style %}
+.card-img-tiles {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  background-color: #fff;
+  z-index: 5
+}
+
+.card-img-tiles .main-img>img,
+.card-img-tiles .thumblist>img {
+    display: block;
+    width: 100%
+}
+.card-img-tiles .main-img {
+  width: 67%;
+  padding-right: .375rem
+}
+
+.card-img-tiles .thumblist {
+  width: 33%;
+  padding-left: .375rem
+}
+
+.card-img-tiles .thumblist>img {
+  margin-bottom: .75rem
+}
+
+.card-img-tiles .thumblist>img:last-child {
+  margin-bottom: 0
+}
+
+.mb-grid-gutter {
+  margin-bottom: 30px !important;
+}
+
+{% endblock %}
+
 {% block title %}
 
     Home
@@ -10,24 +49,48 @@
 
 
 {% block content %}
+
+{% if messages %}
+
+<ul class="messages">
+  {% for message in messages  %}
+  <div class="alert alert-primary" role="alert">
+    {{message}}
+  </div>
+  {% endfor %}
+</ul>
+
+{% endif %}
 <h1>Favoriler</h1>
 
-{% for favori in favoriler %}
-<div class="card" style="width: 18rem;">
-    {% for image in  favori.urun.get_images|slice:":1" %}
-      <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
-    {% endfor %}
-    <div class="card-body">
-      <h5 class="card-title">
-        <a href="{% url 'urun_detay' favori.urun.slug %}">
-        {{favori.urun.name}}
-      </a></h5>
-      <p class="card-text">{{ favori.urun.aciklama }}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
+<div class="container pb-5 mb-sm-1">
+    <div class="row">
+  {% for favori in favoriler %}
+  
+  
+        <div class="col-md-4 col-sm-6">
+            <div class="card border-0 mb-grid-gutter">
+                  <a class="card-img-tiles" href="{% url 'urun_detay' favori.urun.slug %}">
+                    {% for image in  favori.urun.get_images|slice:":3" %}
+                    {% if forloop.first %}
+                    <div class="main-img"><img src="{{ image.image.url }}" alt=""></div>
+                    {% else %}
+                    <div class="thumblist"><img src="{{ image.image.url }}" alt=""></div>
+                    {% endif %}
+                    {% endfor %}
+                  </a>
+                  <div class="card-body border mt-n1 py-4 text-center">
+                    <h2 class="h5 mb-1">{{favori.urun.name}}</h2>
+                    <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{favori.urun.fiyat}}</span></span>
+                    <a href="/favorilerden_sil/{{favori.id}}" onclick ="return confirm('Silmek istediğinizden emin misiniz?')"><input type="submit" value="Sil" class="btn btn-primary"></a>
+                  </div>  
+            </div>
+        </div>
+  
+  
+  
+  {% endfor %}
   </div>
-
-
-{% endfor %}
+  </div>
 
 {% endblock %}

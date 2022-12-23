@@ -1,5 +1,44 @@
 {% extends 'base.html' %}
 
+{% block style %}
+.card-img-tiles {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  background-color: #fff;
+  z-index: 5
+}
+
+.card-img-tiles .main-img>img,
+.card-img-tiles .thumblist>img {
+    display: block;
+    width: 100%
+}
+.card-img-tiles .main-img {
+  width: 67%;
+  padding-right: .375rem
+}
+
+.card-img-tiles .thumblist {
+  width: 33%;
+  padding-left: .375rem
+}
+
+.card-img-tiles .thumblist>img {
+  margin-bottom: .75rem
+}
+
+.card-img-tiles .thumblist>img:last-child {
+  margin-bottom: 0
+}
+
+.mb-grid-gutter {
+  margin-bottom: 30px !important;
+}
+    
+{% endblock %}
+
 
 {% block title %}
 
@@ -10,43 +49,49 @@
 
 
 {% block content %}
+{% if messages %}
 
-
-{% for urun in urunler %}
-<div class="card" style="width: 18rem;">
-    {% for image in  urun.get_images|slice:":1" %}
-      <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
-    {% endfor %}
-    <div class="card-body">
-      <h5 class="card-title">
-        <a href="{% url 'urun_detay' urun.slug %}">
-        {{urun.name}}
-      </a></h5>
-      <p class="card-text">{{ urun.aciklama }}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
+<ul class="messages">
+  {% for message in messages  %}
+  <div class="alert alert-primary" role="alert">
+    {{message}}
   </div>
+  {% endfor %}
+</ul>
 
-  <div class="flex-div" id="cards-section3" style="margin-top: 100px;">
-      <div class="flex-item-products">
-         {% for image in  urun.get_images|slice:":1" %}
-          <img class="card-img-top" src="{{ image.image.url }}" alt="Card image cap">
-         {% endfor %}
-          <div class="card-border">
-            <h4 style="margin-bottom: 0px;">
-              <a href="{% url 'urun_detay' urun.slug %}">
-                {{urun.name}}
-              </a>
-            </h4>
-            <p style="margin-bottom: 0px;"><span><del style="color: #78807b;">{{ urun.aciklama }}
-            </p>
-            <a href="#" class="btn btn-primary">Favorilere Ekle</a>
+{% endif %}
+
+<div class="container pb-5 mb-sm-1">
+  <div class="row">
+{% for urun in urunler %}
+
+
+      <div class="col-md-4 col-sm-6">
+          <div class="card border-0 mb-grid-gutter">
+                <a class="card-img-tiles" href="{% url 'urun_detay' urun.slug %}">
+                  {% for image in  urun.get_images|slice:":3" %}
+                  {% if forloop.first %}
+                  <div class="main-img"><img src="{{ image.image.url }}" alt=""></div>
+                  {% else %}
+                  <div class="thumblist"><img src="{{ image.image.url }}" alt=""></div>
+                  {% endif %}
+                  {% endfor %}
+                </a>
+                <div class="card-body border mt-n1 py-4 text-center">
+                  <h2 class="h5 mb-1">{{urun.name}}</h2>
+                  <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{urun.fiyat}}</span></span>
+                  <form action="/favorilere_ekle/{{urun.id}}" method="POST">
+                    {% csrf_token %}
+                      <input type="submit" value="Favorilere ekle" class="btn btn-pill btn-outline-primary btn-sm">
+                </form>
+                </div>  
           </div>
       </div>
-    </div>
+
 
 
 {% endfor %}
-
+</div>
+</div>
 
 {% endblock %}

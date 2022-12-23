@@ -67,7 +67,7 @@
                 <h5>Sepet - {{ request.session.sepet_urunler }}</h5>
                 {% endif %}
               </a></li>
-              <li><a class="dropdown-item" href="#"><h5>Favoriler</h5></a></li>
+              <li><a class="dropdown-item" href="{% url 'favoriler' %}"><h5>Favoriler</h5></a></li>
               <li><a class="dropdown-item" href="#"><h5>Siparişler</h5></a></li> 
               <li><a class="dropdown-item" href="#"><h5>Adresler</h5></a></li>
               <li><hr class="dropdown-divider"></li>

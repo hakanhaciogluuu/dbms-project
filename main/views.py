@@ -134,8 +134,7 @@ def favoriler(request):
 def favorilere_ekle(request, id):
     url = request.META.get('HTTP_REFERER')
     current_user = request.user
-
-    urunkontrol = Favoriler.objects.filter(urun_id = id)
+    urunkontrol = Favoriler.objects.filter(urun_id = id, user_id = current_user.id)
     if urunkontrol:
         messages.success(request, "Ürün zaten favorilerinde.")
         return HttpResponseRedirect(url)
@@ -148,6 +147,11 @@ def favorilere_ekle(request, id):
         messages.success(request, "Ürün favorilere eklendi.")
         return HttpResponseRedirect(url)
 
+@login_required(login_url='/login')
+def favorilerden_sil(request, id):
+    Favoriler.objects.filter(id=id).delete()
+    messages.success(request, 'Ürün Favorilerden Silinmiştir.')
+    return HttpResponseRedirect("/favoriler")
 
 
 
@@ -178,7 +182,7 @@ def sepete_ekle(request, id):
     url = request.META.get('HTTP_REFERER')
     current_user = request.user
 
-    urunkontrol = Sepet.objects.filter(urun_id = id)
+    urunkontrol = Sepet.objects.filter(urun_id = id, user_id=current_user.id)
     if request.method == 'POST':
         form = SepetForm(request.POST)
         if form.is_valid():
