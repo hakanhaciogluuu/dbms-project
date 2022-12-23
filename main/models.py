@@ -77,9 +77,6 @@ class Sepet(models.Model):
     urun = models.ForeignKey(Urun, on_delete= models.SET_NULL, null=True)
     miktar = models.IntegerField()
 
-    def __str__(self):
-        return self.urun
-
     @property
     def amount(self):
         return(self.miktar * self.urun.fiyat)
