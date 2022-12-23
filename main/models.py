@@ -93,3 +93,48 @@ class SepetForm(ModelForm):
         model = Sepet
         fields = ['miktar']
 
+
+class Sehirler(models.Model):
+    sehir_adi = models.CharField(max_length=50)
+    def __str__(self):
+        return self.sehir_adi
+
+
+class Adres(models.Model):
+    adres_adi = models.CharField(max_length=50)
+    adres = models.TextField(max_length=400)
+    sehir = models.ForeignKey(Sehirler, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return self.adres_adi
+
+    @property
+    def username(self):
+        return(self.user.username)
+    
+    @property
+    def sehir_adi(self):
+        return(self.sehir.sehir_adi)
+
+class Yorum(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    urun = models.ForeignKey(Urun, on_delete=models.CASCADE)
+    text = models.TextField(max_length=300)
+
+    @property
+    def urun(self):
+        return(self.urun.name)
+    
+    @property
+    def username(self):
+        return(self.user.username)
+
+
+class YorumFotograf(models.Model):
+    yorum = models.ForeignKey(Yorum, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="yorumlar")
+
+    @property
+    def get_images(self):
+        return self.images.all()
