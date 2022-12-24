@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Profile
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="col">
+        <h1>Email Güncelle</h1>
+        <hr>
+        <form method ='POST' action="">
+            {% csrf_token %}
+            <fieldset>
+                {{user_form.as_p}}
+            </fieldset>
+            <input type="submit" value="Email Güncelle" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

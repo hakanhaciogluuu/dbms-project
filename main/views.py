@@ -1,11 +1,13 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from main.models import Category, Urun, UrunFotograf, SepetForm, Sepet, Favoriler
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from main.forms import UserUpdateForm
 
 # Create your views here.
 
@@ -208,3 +210,53 @@ def sepetten_sil(request, id):
     request.session['sepet_urunler'] = Sepet.objects.filter(user_id=current_user.id).count()
     messages.success(request, 'Ürün Sepetten Silinmiştir.')
     return HttpResponseRedirect("/sepet")
+
+@login_required(login_url='/login')
+def profile(request):
+    context = {
+        'user' : request.user,
+        'categories': Category.objects.all()
+    }
+    return render(request, 'profile.html', context)
+
+
+@login_required(login_url='/login')
+def profile_sil(request, id):
+    User.objects.filter(id=id).delete()
+    messages.warning(request, 'Hesabınız silinmiştir.')
+    return HttpResponseRedirect("/login")
+
+@login_required(login_url='/login') # Check login
+def profile_email_guncelle(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user) # request.user is user  data
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Your account has been updated!')
+            return HttpResponseRedirect('/profile')
+    else:
+        category = Category.objects.all()
+        user_form = UserUpdateForm(instance=request.user)
+        context = {
+            'category': category,
+            'user_form': user_form,
+        }
+        return render(request, 'profile_email_guncelle.html', context)
+
+@login_required(login_url='/login') # Check login
+def user_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return HttpResponseRedirect('/profile')
+        else:
+            messages.error(request, 'Please correct the error below.<br>'+ str(form.errors))
+            return HttpResponseRedirect('/password')
+    else:
+        #category = Category.objects.all()
+        form = PasswordChangeForm(request.user)
+        return render(request, 'profile_parola_guncelle.html', {'form': form, #'category': category
+                       })

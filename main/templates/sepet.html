@@ -264,9 +264,10 @@ select.form-control {
       <table class="table">
           <thead>
               <tr>
-                  <th>Product Name</th>
-                  <th class="text-center">Quantity</th>
-                  <th class="text-center">Subtotal</th>
+                  <th>Ürün Adı</th>
+                  <th class="text-center">Miktar</th>
+                  <th class="text-center">Toplam Tutar</th>
+                  <th class="text-center">Ürün Sil</th>
               </tr>
           </thead>
           <tbody>
@@ -290,6 +291,7 @@ select.form-control {
                       </div>
                   </td>
                   <td class="text-center text-lg text-medium">{{rs.miktar}} * {{rs.fiyat}} = {{rs.amount}}</td>
+                  <td class="text-center text-lg text-medium"><a href = '/sepetten_sil/{{rs.id}}'><input type="submit" value="Sil" class="btn btn-danger"></a></td>
               </tr>
               {% endfor  %}
           </tbody>

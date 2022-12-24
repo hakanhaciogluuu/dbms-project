@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+    Profile
+{% endblock %}
+
+
+
+{% block content %}
+
+{% if messages %}
+        {% for message in messages %}
+            <div style="color: #d43f3a; font-size: medium">
+                {{ message|safe }}
+            </div>
+        {% endfor %}
+{% endif %}
+
+<div class="container mt-3">
+    <div class="col">
+        <h1>Profilim</h1>
+        <hr>
+            <div class="mb-3">
+                <h3>Kullanıcı Adı: {{ user.username }}</h3>
+            </div>
+            <div class="mb-3">
+                <h3>e-Mail: {{ user.email }}</h3>
+            </div>
+            <div class="mb-3">
+                <h3>Adı: {{ user.first_name }}</h3>
+            </div>
+            <div class="mb-3">
+                <h3>Soyadı: {{ user.last_name }}</h3>
+            </div>
+            <a href="/profile_email_guncelle"><input type="submit" value="Email Güncelle" class="btn btn-primary"></a> <input type="submit" value="Şifre Güncelle" class="btn btn-primary"> <a href="/profile_sil/{{user.id}}"><input type="submit" value="Sil" class="btn btn-danger"></a> 
+    </div>
+</div>
+
+
+
+
+{% endblock %}
