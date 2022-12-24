@@ -262,6 +262,7 @@ def user_password(request):
                        })
 
 def adres_ekle(request):
+    category = Category.objects.all()
     if request.method == 'POST':
         form = AddressForm(request.POST)
         if form.is_valid():
@@ -276,4 +277,4 @@ def adres_ekle(request):
             form = AddressForm(instance=adres)
         else:
             form = AddressForm()
-    return render(request, 'adres_ekle.html', {'form': form})
+    return render(request, 'adres_ekle.html', {'form': form , 'categories' : category})
