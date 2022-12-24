@@ -85,10 +85,7 @@ class Sepet(models.Model):
     def fiyat(self):
         return (self.urun.fiyat)
 
-class SepetForm(ModelForm):
-    class Meta:
-        model = Sepet
-        fields = ['miktar']
+
 
 
 class Sehirler(models.Model):

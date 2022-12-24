@@ -1,13 +1,13 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from main.models import Category, Urun, UrunFotograf, SepetForm, Sepet, Favoriler
+from django.shortcuts import render, redirect, get_object_or_404
+from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from main.forms import UserUpdateForm
+from main.forms import UserUpdateForm, SepetForm, AddressForm
 
 # Create your views here.
 
@@ -260,3 +260,20 @@ def user_password(request):
         form = PasswordChangeForm(request.user)
         return render(request, 'profile_parola_guncelle.html', {'form': form, #'category': category
                        })
+
+def adres_ekle(request):
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            adres = form.save(commit=False)
+            adres.user = request.user
+            adres.save()
+            return redirect('adres_ekle')
+    elif request.method == 'GET':
+        adres_id = request.GET.get('adres_id')
+        if adres_id:
+            adres = get_object_or_404(Adres, pk=adres_id)
+            form = AddressForm(instance=adres)
+        else:
+            form = AddressForm()
+    return render(request, 'adres_ekle.html', {'form': form})
