@@ -264,17 +264,25 @@ def user_password(request):
 def adres_ekle(request):
     category = Category.objects.all()
     if request.method == 'POST':
-        form = AddressForm(request.POST)
+        # Adres güncellenirse, formun instance'ı o adres olmalıdır
+        adres_id = request.POST.get('adres_id')
+        if adres_id:
+            adres = get_object_or_404(Adres, pk=adres_id)
+            form = AddressForm(request.POST, instance=adres)
+        else:
+            # Adres eklenirse, formun instance'ı olmamalıdır
+            form = AddressForm(request.POST)
         if form.is_valid():
             adres = form.save(commit=False)
             adres.user = request.user
             adres.save()
             return redirect('adres_ekle')
     elif request.method == 'GET':
+        # Adres seçilirse, formun instance'ı o adres olmalıdır
         adres_id = request.GET.get('adres_id')
         if adres_id:
             adres = get_object_or_404(Adres, pk=adres_id)
             form = AddressForm(instance=adres)
         else:
             form = AddressForm()
-    return render(request, 'adres_ekle.html', {'form': form , 'categories' : category})
+    return render(request, 'adres_ekle.html', {'form': form , 'categories' : category, 'adres_id': adres_id})
