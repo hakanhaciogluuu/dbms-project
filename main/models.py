@@ -137,3 +137,11 @@ class YorumFotograf(models.Model):
 class Favoriler(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
+
+
+class CreditCard(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card_number = models.CharField(max_length=16)
+    expiration_date_month = models.CharField(max_length=2 ,default=1)
+    expiration_date_year = models.CharField(max_length=2, default=24)
+    cvv = models.CharField(max_length=3)

@@ -1,13 +1,13 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres
+from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from main.forms import UserUpdateForm, SepetForm, AddressForm
+from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm
 
 # Create your views here.
 
@@ -261,28 +261,43 @@ def user_password(request):
         return render(request, 'profile_parola_guncelle.html', {'form': form, #'category': category
                        })
 
-def adres_ekle(request):
-    category = Category.objects.all()
+def add_address(request):
     if request.method == 'POST':
-        # Adres güncellenirse, formun instance'ı o adres olmalıdır
-        adres_id = request.POST.get('adres_id')
-        if adres_id:
-            adres = get_object_or_404(Adres, pk=adres_id)
-            form = AddressForm(request.POST, instance=adres)
-        else:
-            # Adres eklenirse, formun instance'ı olmamalıdır
-            form = AddressForm(request.POST)
+        form = AddressForm(request.POST)
         if form.is_valid():
-            adres = form.save(commit=False)
-            adres.user = request.user
-            adres.save()
-            return redirect('adres_ekle')
-    elif request.method == 'GET':
-        # Adres seçilirse, formun instance'ı o adres olmalıdır
-        adres_id = request.GET.get('adres_id')
-        if adres_id:
-            adres = get_object_or_404(Adres, pk=adres_id)
-            form = AddressForm(instance=adres)
-        else:
-            form = AddressForm()
-    return render(request, 'adres_ekle.html', {'form': form , 'categories' : category, 'adres_id': adres_id})
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            return redirect('address_list')
+    else:
+        form = AddressForm()
+    return render(request, 'add_address.html', {'form': form})
+
+def address_list(request):
+    addresses = Adres.objects.filter(user=request.user)
+    return render(request, 'address_list.html', {'addresses': addresses})
+
+def delete_address(request, address_id):
+    Adres.objects.get(id=address_id).delete()
+    return redirect('address_list')
+
+
+def add_credit_card(request):
+    if request.method == 'POST':
+        form = CreditCardForm(request.POST)
+        if form.is_valid():
+            credit_card = form.save(commit=False)
+            credit_card.user = request.user
+            credit_card.save()
+            return redirect('credit_card_list')
+    else:
+        form = CreditCardForm()
+    return render(request, 'add_credit_card.html', {'form': form})
+
+def credit_card_list(request):
+    credit_cards = CreditCard.objects.filter(user=request.user)
+    return render(request, 'credit_card_list.html', {'credit_cards': credit_cards})
+
+def delete_credit_card(request, credit_card_id):
+    CreditCard.objects.get(id=credit_card_id).delete()
+    return redirect('credit_card_list')

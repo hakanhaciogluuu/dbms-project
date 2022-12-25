@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Adres
+{% endblock %}
+
+
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Adres Adı</th>
+            <th>Adres</th>
+            <th>Şehir</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for address in addresses %}
+            <tr>
+                <td>{{ address.adres_adi }}</td>
+                <td>{{ address.adres }}</td>
+                <td>{{ address.sehir }}</td>
+                <td>
+                    <a href="{% url 'delete_address' address.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button class="btn btn-outline-primary" type="submit"> <a class="dropdown-item" href="{% url 'add_address' %}"><h5>Adres Ekle</h5></a> </button>
+
+{% endblock %}

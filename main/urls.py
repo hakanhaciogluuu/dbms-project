@@ -25,5 +25,12 @@ urlpatterns = [
     path('profile_sil/<int:id>', views.profile_sil, name='profile_sil'),
     path('profile_email_guncelle', views.profile_email_guncelle, name='profile_email_guncelle'),
     path('password/', views.user_password, name='user_password'),
-    path('adres_ekle/', views.adres_ekle, name='adres_ekle'),
+    #######Adres
+    path('add_address', views.add_address, name='add_address'),
+    path('address_list', views.address_list, name='address_list'),
+    path('delete_address/<int:address_id>', views.delete_address, name='delete_address'),
+    #######Credit-Card
+    path('add_credit_card/', views.add_credit_card, name='add_credit_card'),
+    path('credit_card_list/', views.credit_card_list, name='credit_card_list'),
+    path('delete_credit_card/<int:credit_card_id>/', views.delete_credit_card, name='delete_credit_card'),
 ]
