@@ -60,9 +60,33 @@
 </ul>
 
 {% endif %}
-
-<div class="container pb-5 mb-sm-1">
-  <div class="row">
+    <form method="get" action="">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="renk">Renk:</label>
+          <select name="renk" id="renk" class="form-control">
+            {% for renk in renkler %}
+            <option value="{{ renk.id }}" {% if renk.id == selected_color %}selected{% endif %}>{{ renk.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="beden">Beden:</label>
+          <select name="beden" id="beden" class="form-control">
+            {% for beden in bedenler %}
+            <option value="{{ beden.id }}" {% if beden.id == selected_size %}selected{% endif %}>{{ beden.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12 text-center">
+          <input type="submit" value="Filtrele" class="btn btn-primary">
+        </div>
+      </div>
+    </form>
+    <div class="container pb-5 mb-sm-1" style="margin-top: 20px;">
+      <div class="row">
 {% for urun in urunler %}
 
 
@@ -79,6 +103,7 @@
                 </a>
                 <div class="card-body border mt-n1 py-4 text-center">
                   <h2 class="h5 mb-1">{{urun.name}}</h2>
+                  <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{urun.renk}}/{{urun.beden}}</span></span>
                   <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{urun.fiyat}}</span></span>
                   <form action="/favorilere_ekle/{{urun.id}}" method="POST">
                     {% csrf_token %}

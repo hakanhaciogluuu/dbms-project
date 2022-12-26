@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django.utils.text import slugify
 from djmoney.models.fields import MoneyField
 from django.contrib.auth.models import User
+from django.apps import apps
 
 # Create your models here.
 
@@ -65,7 +66,7 @@ class Urun(models.Model):
     def get_images(self):
         return self.images.all()
 
-
+        
 
 class UrunFotograf(models.Model):
     urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1, related_name='images')

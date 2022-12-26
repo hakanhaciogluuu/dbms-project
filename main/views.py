@@ -1,10 +1,10 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard
+from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard, Renk, Beden
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm
@@ -104,8 +104,21 @@ def urunler(request, slug):
     context = {
         "urunler": Urun.objects.filter(category__slug = slug),
         "fotograflar": UrunFotograf.objects.all(),
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.all(),
+        "renkler": Renk.objects.all(),
+        "bedenler": Beden.objects.all(),
     }
+    selected_color = request.GET.get('renk')
+    selected_size = request.GET.get('beden')
+
+    if selected_color:
+        context["urunler"] = context["urunler"].filter(renk__id=selected_color)
+
+    if selected_size:
+        context["urunler"] = context["urunler"].filter(beden__id=selected_size)
+
+    context["selected_color"] = selected_color
+    context["selected_size"] = selected_size
     return render(request,"urunler.html", context)
 
 
@@ -301,3 +314,22 @@ def credit_card_list(request):
 def delete_credit_card(request, credit_card_id):
     CreditCard.objects.get(id=credit_card_id).delete()
     return redirect('credit_card_list')
+
+
+
+
+def favorilere_eklenen_urunler_kategori(request):
+    # Tüm kategorileri al
+    kategoriler = Category.objects.all()
+
+    # Her kategori için en çok favorilere eklenen üç ürünü belirle
+    favorilere_eklenen_urunler_kategori = {}
+    for kategori in kategoriler:
+        favorilere_eklenen_urunler = Favoriler.objects.filter(urun__category=kategori).values('urun').annotate(num_favoriler=Count('urun')).order_by('-num_favoriler')[:3]
+        en_cok_favorilere_eklenen_urunler = []
+        for favorilere_eklenen_urun in favorilere_eklenen_urunler:
+            en_cok_favorilere_eklenen_urunler.append(Urun.objects.get(id=favorilere_eklenen_urun['urun']))
+        favorilere_eklenen_urunler_kategori[kategori.name] = en_cok_favorilere_eklenen_urunler
+
+    # Sayfayı render et
+    return render(request, 'favorilere_eklenen_urunler_kategori.html', {'favorilere_eklenen_urunler_kategori': favorilere_eklenen_urunler_kategori})

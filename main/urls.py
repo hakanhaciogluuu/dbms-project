@@ -33,4 +33,5 @@ urlpatterns = [
     path('add_credit_card/', views.add_credit_card, name='add_credit_card'),
     path('credit_card_list/', views.credit_card_list, name='credit_card_list'),
     path('delete_credit_card/<int:credit_card_id>/', views.delete_credit_card, name='delete_credit_card'),
+    path('favorilere_eklenen_urunler_kategori/', views.favorilere_eklenen_urunler_kategori, name='favorilere_eklenen_urunler_kategori'),
 ]

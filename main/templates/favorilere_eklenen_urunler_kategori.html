@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block style %}
 .card-img-tiles {
   display: -webkit-box;
@@ -36,9 +37,8 @@
 .mb-grid-gutter {
   margin-bottom: 30px !important;
 }
-    
-{% endblock %}
 
+{% endblock %}
 
 {% block title %}
 
@@ -49,6 +49,7 @@
 
 
 {% block content %}
+
 {% if messages %}
 
 <ul class="messages">
@@ -60,14 +61,12 @@
 </ul>
 
 {% endif %}
-
-
-{% if search %}
-
-
 <div class="container pb-5 mb-sm-1">
-  <div class="row">
-{% for urun in urunler %}
+    <div class="row">
+        <h1>En çok favorilere eklenen 3 ürün </h1>
+        {% for kategori, urunler in favorilere_eklenen_urunler_kategori.items %}
+        <h2>{{ kategori }}</h2>
+        {% for urun in urunler %}
       <div class="col-md-4 col-sm-6">
           <div class="card border-0 mb-grid-gutter">
                 <a class="card-img-tiles" href="{% url 'urun_detay' urun.slug %}">
@@ -81,6 +80,7 @@
                 </a>
                 <div class="card-body border mt-n1 py-4 text-center">
                   <h2 class="h5 mb-1">{{urun.name}}</h2>
+                  <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{urun.renk}}/{{urun.beden}}</span></span>
                   <span class="d-block mb-3 font-size-xs text-muted"><span class="font-weight-semibold">{{urun.fiyat}}</span></span>
                   <form action="/favorilere_ekle/{{urun.id}}" method="POST">
                     {% csrf_token %}
@@ -90,24 +90,10 @@
           </div>
       </div>
 
-
-
 {% endfor %}
-</div>
-</div>
+{% endfor %}
 
-
-
-
-
-{% else %}
-<h1> Lütfen aranacak kelimeyi giriniz</h1>
-
-{% endif %}
-
-
-
-
-
+  </div>
+  </div>
 
 {% endblock %}
