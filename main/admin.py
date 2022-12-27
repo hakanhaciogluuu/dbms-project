@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
-from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler,Adres,YorumFotograf,Yorum,Favoriler
+from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler,Adres,YorumFotograf,Yorum,Favoriler,Siparis, SiparisUrun
 from django.db.models import Count
 
 class UrunFotografAdmin(admin.StackedInline):
@@ -43,23 +43,19 @@ class FavorilerAdmin(admin.ModelAdmin):
 
 
 class SehirlerAdmin(admin.ModelAdmin):
-    list_display = ['sehir_adi'] 
+    list_display = ['sehir_adi']
 
+class SiparisUrunline(admin.StackedInline):
+    model = SiparisUrun
 
-class FavorilereEklenenUrunlerAdmin(admin.ModelAdmin):
-    def get_queryset(self, request):
-        # Alt kategoriye göre filtreleme yapmak için, Category modelinden bir category instance'ı alın.
-        categories = Category.objects.all()
+class SiparisAdmin(admin.ModelAdmin):
+    list_display = ['user', 'adres','tarih','durum','toplam_tutar', 'durum']
+    list_filter = ['durum']
+    inlines= [SiparisUrunline]
 
-        favorilere_eklenen_urunler = []
-        for category in categories:
-             urunler = Favoriler.objects.filter(urun__category=category.id)
+class SiparisUrunAdmin(admin.ModelAdmin):
+    list_display = ['siparis', 'urun', 'miktar','fiyat']
 
-            # Bu queryset'ten, en çok favorilere eklenen ilk üç ürünü bulun.
-        favorilere_eklenen_urunler += urunler.values('urun').annotate(count=Count('urun')).order_by('-count')[:3]
-
-        # İşlenmiş favorilere eklenen ürünleri döndürün.
-        return favorilere_eklenen_urunler
 
 # View'ı bir Django admin view olarak kaydedin.
 admin.site.register(Renk)
@@ -71,6 +67,8 @@ admin.site.register(Yorum,YorumAdmin)
 admin.site.register(Sepet,SepetAdmin)
 admin.site.register(Adres, AdresAdmin)
 admin.site.register(Sehirler, SehirlerAdmin)
-admin.site.register(Favoriler, FavorilereEklenenUrunlerAdmin)
+admin.site.register(Favoriler, FavorilerAdmin)
+admin.site.register(Siparis, SiparisAdmin)
+admin.site.register(SiparisUrun, SiparisUrunAdmin)
 
 # Register your models here.

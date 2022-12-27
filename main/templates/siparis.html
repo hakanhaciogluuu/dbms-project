@@ -267,7 +267,6 @@ select.form-control {
                   <th>Ürün Adı</th>
                   <th class="text-center">Miktar</th>
                   <th class="text-center">Toplam Tutar</th>
-                  <th class="text-center">Ürün Sil</th>
               </tr>
           </thead>
           <tbody>
@@ -291,7 +290,6 @@ select.form-control {
                       </div>
                   </td>
                   <td class="text-center text-lg text-medium">{{rs.miktar}} * {{rs.fiyat}} = {{rs.amount}}</td>
-                  <td class="text-center text-lg text-medium"><a href = '/sepetten_sil/{{rs.id}}'><input type="submit" value="Sil" class="btn btn-danger"></a></td>
               </tr>
               {% endfor  %}
           </tbody>
@@ -300,16 +298,48 @@ select.form-control {
       <div class="column text-lg">Toplam: <span class="text-medium">{{total}}</span></div>
   </div>
   <div class="shopping-cart-footer">
-      <div class="column"><a class="btn btn-success" href="{% url 'siparis' %}">Siparis Ver</a></div>
+      <div class="column"><a class="btn btn-success" href="#">Siparişi Tamamla</a></div>
   </div>
-  {% if sepet|length == 0 %}
 
-  <h5>Sepetiniz Boş</h5>
-
-  {% else %}
   <h5>Toplam tutar = {{total}}</h5>
 
-  {% endif %}
-  
-  
+  <form method="POST">
+    {% csrf_token %}
+    {% if error %} <div class="alert alert-danger"> {{error}}</div> {% endif %}
+    {{ form.as_p }}
+    {% comment %} <div class="mb-3">
+        <label for="first_name">Ad:</label>
+            <input type="text" name="first_name"  value="{{ user.first_name }}" class="input" maxlength="10" required id="first_name">
+    </div>
+    <div class="mb-3">
+        <label for="last_name">Soyad</label>
+        <input type="text" name="last_name"  value="{{ user.last_name }}" class="input" maxlength="10" required id="id_last_name">
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="telefon" class="form-label">Telefon</label>
+            <input type="text" class="form-control" name="telefon">
+        </div>
+        <div class="col"> 
+            <label for="lastname" class="form-label">Soyisim</label>
+            <input type="text" class="form-control" name="lastname">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+        <div class="col">
+            <label for="repassword" class="form-label">Re-Password</label>
+            <input type="password" class="form-control" name="repassword">
+        </div>
+    </div>
+    {% endcomment %}
+    <div class="shopping-cart-footer">
+        <input type="submit" value="Sipariş Ver" class="btn btn-primary">
+    </div> 
+
+</form>
+
 {% endblock %}

@@ -239,7 +239,7 @@ select.form-control {
 
 {% block title %}
 
-    Sepet
+Siparişlerim
 {% endblock %}
 
 
@@ -259,57 +259,30 @@ select.form-control {
 {% endif %}
 
 <div class="container padding-bottom-3x mb-1">
-  <!-- Shopping Cart-->
   <div class="table-responsive shopping-cart">
       <table class="table">
           <thead>
               <tr>
-                  <th>Ürün Adı</th>
-                  <th class="text-center">Miktar</th>
+                  <th class="text-center">Ad</th>
+                  <th class="text-center">Soyad</th>
+                  <th class="text-center">Sipariş Tarihi</th>
                   <th class="text-center">Toplam Tutar</th>
-                  <th class="text-center">Ürün Sil</th>
+                  <th class="text-center">Durum </th>
               </tr>
           </thead>
           <tbody>
-            {% for  rs in sepet  %}
+            {% for  rs in siparisler  %}
               <tr>
-                  <td>
-                      <div class="product-item">
-                          <a class="product-thumb" href="{% url 'urun_detay' rs.urun.slug %}"> 
-                            {% for image in  rs.urun.get_images|slice:":1" %}
-                            <img class="card-img" src="{{ image.image.url }}" alt="Card image cap">
-                            {% endfor %}
-                          </a>
-                          <div class="product-info">
-                              <h4 class="product-title"><a href="{% url 'urun_detay' rs.urun.slug %}">{{rs.urun.name}}</a></h4><span><em>Beden:</em> {{rs.urun.beden}}</span><span><em>Renk:</em> {{rs.urun.renk}}</span>
-                          </div>
-                      </div>
-                  </td>
-                  <td class="text-center">
-                      <div class="count-input">
-                        <p> {{rs.miktar}} </p>
-                      </div>
-                  </td>
-                  <td class="text-center text-lg text-medium">{{rs.miktar}} * {{rs.fiyat}} = {{rs.amount}}</td>
-                  <td class="text-center text-lg text-medium"><a href = '/sepetten_sil/{{rs.id}}'><input type="submit" value="Sil" class="btn btn-danger"></a></td>
+                <td class="text-center text-lg text-medium">{{rs.first_name}}</td>
+                <td class="text-center text-lg text-medium">{{rs.last_name}}</td>
+                <td class="text-center text-lg text-medium">{{rs.created_at}}</td>
+                <td class="text-center text-lg text-medium">{{rs.toplam_tutar}}</td>
+                <td class="text-center text-lg text-medium">{{rs.durum}}</td>
               </tr>
               {% endfor  %}
           </tbody>
       </table>
-  </div>
-      <div class="column text-lg">Toplam: <span class="text-medium">{{total}}</span></div>
-  </div>
-  <div class="shopping-cart-footer">
-      <div class="column"><a class="btn btn-success" href="{% url 'siparis' %}">Siparis Ver</a></div>
-  </div>
-  {% if sepet|length == 0 %}
 
-  <h5>Sepetiniz Boş</h5>
-
-  {% else %}
-  <h5>Toplam tutar = {{total}}</h5>
-
-  {% endif %}
   
   
 {% endblock %}

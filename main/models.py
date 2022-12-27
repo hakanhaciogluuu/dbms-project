@@ -146,3 +146,34 @@ class CreditCard(models.Model):
     expiration_date_month = models.CharField(max_length=2 ,default=1)
     expiration_date_year = models.CharField(max_length=2, default=24)
     cvv = models.CharField(max_length=3)
+
+DURUM_CHOICES = (
+    ('onay_bekliyor', 'Onay Bekliyor'),
+    ('kargolandi', 'Kargolandı'),
+    ('teslim_edildi', 'Teslim Edildi'),
+    ('iade_edildi', 'İade Edildi'),
+)
+
+class Siparis(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=10, default='no-name')
+    last_name = models.CharField(max_length=10, default='no-name')
+    telefon = models.CharField(blank=True, max_length=20)
+    urunler = models.ManyToManyField(Urun, through='SiparisUrun')
+    adres = models.ForeignKey(Adres, on_delete=models.CASCADE)
+    kredi_karti = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
+    tarih = models.DateTimeField(auto_now_add=True)
+    ip = models.CharField(blank=True, max_length=20)
+    durum = models.CharField(max_length=50, choices=DURUM_CHOICES, default='onay_bekliyor')
+    toplam_tutar = MoneyField(max_digits=10, default_currency='TL')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class SiparisUrun(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    siparis = models.ForeignKey(Siparis, on_delete=models.CASCADE)
+    urun = models.ForeignKey(Urun, on_delete=models.CASCADE)
+    miktar = models.PositiveIntegerField()
+    fiyat = MoneyField(max_digits=10, default_currency='TL')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

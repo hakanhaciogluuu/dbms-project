@@ -1,13 +1,13 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard, Renk, Beden
+from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard, Renk, Beden , Siparis, SiparisUrun
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm
+from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm, SiparisForm
 
 # Create your views here.
 
@@ -305,11 +305,11 @@ def add_credit_card(request):
             return redirect('credit_card_list')
     else:
         form = CreditCardForm()
-    return render(request, 'add_credit_card.html', {'form': form})
+    return render(request, 'add_credit_card.html', {'form': form , "categories" : Category.objects.all()})
 
 def credit_card_list(request):
     credit_cards = CreditCard.objects.filter(user=request.user)
-    return render(request, 'credit_card_list.html', {'credit_cards': credit_cards})
+    return render(request, 'credit_card_list.html', {'credit_cards': credit_cards, "categories" : Category.objects.all()})
 
 def delete_credit_card(request, credit_card_id):
     CreditCard.objects.get(id=credit_card_id).delete()
@@ -319,6 +319,9 @@ def delete_credit_card(request, credit_card_id):
 
 
 def favorilere_eklenen_urunler_kategori(request):
+    # Eğer kullanıcı superuser değilse, hata mesajı göster
+    if not request.user.is_superuser:
+        return HttpResponse("Bu sayfaya erişim izniniz yok.")
     # Tüm kategorileri al
     kategoriler = Category.objects.all()
 
@@ -332,4 +335,106 @@ def favorilere_eklenen_urunler_kategori(request):
         favorilere_eklenen_urunler_kategori[kategori.name] = en_cok_favorilere_eklenen_urunler
 
     # Sayfayı render et
-    return render(request, 'favorilere_eklenen_urunler_kategori.html', {'favorilere_eklenen_urunler_kategori': favorilere_eklenen_urunler_kategori})
+    return render(request, 'favorilere_eklenen_urunler_kategori.html', {'favorilere_eklenen_urunler_kategori': favorilere_eklenen_urunler_kategori, "categories" : Category.objects.all()})
+
+
+def siparis(request):
+    category = Category.objects.all()
+    current_user = request.user
+    sepet = Sepet.objects.filter(user_id = current_user.id)
+    total = 0
+    for rs in sepet:
+        total += rs.urun.fiyat * rs.miktar
+
+    if request.method == 'POST':
+        form = SiparisForm(request.POST)
+        if form.is_valid():
+
+            data = Siparis()
+            data.first_name = form.cleaned_data['first_name'] #get product quantity from form
+            data.last_name = form.cleaned_data['last_name']
+            data.adres = form.cleaned_data['adres']
+            data.telefon = form.cleaned_data['telefon']
+            data.kredi_karti = form.cleaned_data['kredi_karti']
+            data.user_id = current_user.id
+            data.toplam_tutar = total
+            data.ip = request.META.get('REMOTE_ADDR')
+            data.save() #
+
+
+            for rs in sepet:
+                detail = SiparisUrun()
+                detail.siparis_id  = data.id # Order Id
+                detail.urun_id     = rs.urun_id
+                detail.user_id     = current_user.id
+                detail.miktar      = rs.miktar
+                detail.fiyat       = rs.urun.fiyat
+                detail.save()
+                # ***Reduce quantity of sold product from Amount of Product
+                urun = Urun.objects.get(id=rs.urun_id)
+                urun.stok -= rs.miktar
+                urun.save()
+                #************ <> *****************
+
+            Sepet.objects.filter(user_id=current_user.id).delete() # Clear & Delete shopcart
+            request.session['cart_items']=0
+            messages.success(request, "Siparişiniz Verilmiştir.")
+            return render(request, '/sepet',{'category': category})
+        else:
+            messages.warning(request, form.errors)
+            return HttpResponseRedirect("/sepet")
+
+    form= SiparisForm()
+    context = {'sepet': sepet,
+               'category': category,
+               'total': total,
+               'form': form,
+               }
+    return render(request, 'siparis.html', context)
+
+@login_required(login_url='/login') # Check login
+def siparislerim(request):
+    category = Category.objects.all()
+    current_user = request.user
+    siparis=Siparis.objects.filter(user_id=current_user.id)
+    context = {'category': category,
+               'siparisler': siparis,
+               }
+    return render(request, 'siparislerim.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required(login_url='/login')
+# def siparis(request):
+#     categories = Category.objects.all()
+#     user = request.user
+#     sepet = Sepet.objects.filter(user_id = user.id)
+#     kredi_kart = CreditCard.objects.filter(user_id = user.id)
+#     adres = Adres.objects.filter(user_id = user.id)
+#     total = 0
+#     for rs in sepet:
+#         total += rs.urun.fiyat * rs.miktar
+#     if(total == 0):
+#         return HttpResponse("Sepetiniz Boş.")
+#     else:
+#         context = {
+#             'sepet':sepet,
+#             'categories': categories,
+#             'kredi_kart': kredi_kart,
+#             'adres': adres,
+#             'total': total
+#         }
+#         return render(request, 'siparis.html',context)

@@ -16,6 +16,7 @@ urlpatterns = [
     path("favoriler", views.favoriler, name= "favoriler"),
     path('favorilere_ekle/<int:id>', views.favorilere_ekle, name='favorilere_ekle'),
     path('favorilerden_sil/<int:id>', views.favorilerden_sil, name='favorilerden_sil'),
+    path('favorilere_eklenen_urunler_kategori/', views.favorilere_eklenen_urunler_kategori, name='favorilere_eklenen_urunler_kategori'),
     #####Sepet
     path("sepet", views.sepet, name= "sepet"),
     path('sepete_ekle/<int:id>', views.sepete_ekle, name='sepete_ekle'),
@@ -33,5 +34,8 @@ urlpatterns = [
     path('add_credit_card/', views.add_credit_card, name='add_credit_card'),
     path('credit_card_list/', views.credit_card_list, name='credit_card_list'),
     path('delete_credit_card/<int:credit_card_id>/', views.delete_credit_card, name='delete_credit_card'),
-    path('favorilere_eklenen_urunler_kategori/', views.favorilere_eklenen_urunler_kategori, name='favorilere_eklenen_urunler_kategori'),
+    #######Siparis
+    path('siparis/', views.siparis, name='siparis'),
+    path('siparislerim/', views.siparislerim, name='siparislerim'),
+    
 ]
