@@ -1,19 +1,15 @@
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
-from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler,Adres,YorumFotograf,Yorum,Favoriler,Siparis, SiparisUrun
+from .models import Renk,Beden,Tema,Category,Urun,UrunFotograf,Sepet,Sehirler,Adres,Yorum,Favoriler,Siparis, SiparisUrun,CreditCard
 from django.db.models import Count
 
 class UrunFotografAdmin(admin.StackedInline):
     model = UrunFotograf
 
-class YorumFotografAdmin(admin.StackedInline):
-    model = YorumFotograf
 
 class YorumAdmin(admin.ModelAdmin):
     list_display = ['yorum_urun', 'user', 'text']
-    inlines = [YorumFotografAdmin]
-    class Meta:
-        model = Yorum
+    search_fields = ['user__username', 'text']
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name","slug","tema")
@@ -49,15 +45,15 @@ class SiparisUrunline(admin.StackedInline):
     model = SiparisUrun
 
 class SiparisAdmin(admin.ModelAdmin):
-    list_display = ['user', 'adres','tarih','durum','toplam_tutar', 'durum']
+    list_display = ['user', 'adres','tarih','durum','toplam_tutar']
     list_filter = ['durum']
+    list_editable = ['durum']
     inlines= [SiparisUrunline]
 
 class SiparisUrunAdmin(admin.ModelAdmin):
     list_display = ['siparis', 'urun', 'miktar','fiyat']
 
 
-# View'ı bir Django admin view olarak kaydedin.
 admin.site.register(Renk)
 admin.site.register(Beden)
 admin.site.register(Tema, TemaAdmin)
@@ -70,5 +66,6 @@ admin.site.register(Sehirler, SehirlerAdmin)
 admin.site.register(Favoriler, FavorilerAdmin)
 admin.site.register(Siparis, SiparisAdmin)
 admin.site.register(SiparisUrun, SiparisUrunAdmin)
+admin.site.register(CreditCard)
 
-# Register your models here.
+

@@ -239,7 +239,7 @@ select.form-control {
 
 {% block title %}
 
-Siparişlerim
+Siparis Detay
 {% endblock %}
 
 
@@ -260,30 +260,55 @@ Siparişlerim
 
 <div class="container padding-bottom-3x mb-1">
   <div class="table-responsive shopping-cart">
-      <table class="table">
-          <thead>
-              <tr>
-                  <th class="text-center">Ad</th>
-                  <th class="text-center">Soyad</th>
-                  <th class="text-center">Sipariş Tarihi</th>
-                  <th class="text-center">Toplam Tutar</th>
-                  <th class="text-center">Durum </th>
-                  <th class="text-center">Detay Görüntüle </th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for  rs in siparisler  %}
-              <tr>
-                <td class="text-center text-lg text-medium">{{rs.first_name}}</td>
-                <td class="text-center text-lg text-medium">{{rs.last_name}}</td>
-                <td class="text-center text-lg text-medium">{{rs.created_at}}</td>
-                <td class="text-center text-lg text-medium">{{rs.toplam_tutar}}</td>
-                <td class="text-center text-lg text-medium">{{rs.durum}}</td>
-                <td class="text-center text-lg text-medium"><a href = '/siparis_detay/{{ rs.id }}'><input type="submit" value="Detay" class="btn btn-primary"></a></td>
-              </tr>
-              {% endfor  %}
-          </tbody>
-      </table>
+    <table class="shopping-cart-table table">
+        <tr>
+            <th class="text-left">Ad Soyad</th>
+            <td class="text-left">{{ siparis.first_name}} {{ siparis.last_name }} </td>
+        </tr>
+        <tr>
+            <th class="text-left">Telefon</th>
+            <td class="text-left">{{ siparis.telefon}}</td>
+        </tr>
+        <tr>
+            <th class="text-left">Adres</th>
+            <td class="text-left">{{ siparis.adres.adres}} / {{siparis.adres.sehir}}</td>
+        </tr>
+        <tr>
+            <th class="text-left">Durum</th>
+            <td class="text-left">{{ siparis.durum}}</td>
+        </tr>
+
+        <tr>
+            <th class="text-left">Tarih</th>
+            <td class="text-left">{{ siparis.created_at}}</td>
+        </tr>
+
+
+    </table>
+
+    <div class="section-title">
+        <h4 class="title">Sipariş Ürün Listesi</h4>
+    </div>
+
+    <table class="shopping-cart-table table">
+        <tr>
+            <th class="text-left">Ürün Adı </th>
+            <th class="text-left">Fiyat </th>
+            <th class="text-left">Adet </th>
+            <th class="text-left">Tarih </th>
+            <th class="text-left">Durum </th>
+        </tr>
+        {% for rs in siparisurun %}
+            <tr>
+                <td class="text-left">{{ rs.urun.name}}</td>
+                <td class="text-left">{{ rs.fiyat}} </td>
+                <td class="text-left">{{ rs.miktar}} </td>
+                <td class="text-left">{{ rs.created_at}} </td>
+                <td class="text-left">{{ rs.status}} </td>
+            </tr>
+        {% endfor %}
+
+    </table>
 
   
   

@@ -112,29 +112,6 @@ class Adres(models.Model):
     def sehir_adi(self):
         return(self.sehir.sehir_adi)
 
-class Yorum(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    yorum_urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
-    text = models.TextField(max_length=300)
-
-    @property
-    def urun_adi(self):
-        return(self.yorum_urun.name)
-    
-    @property
-    def username(self):
-        return(self.user.username)
-
-
-class YorumFotograf(models.Model):
-    yorum = models.ForeignKey(Yorum, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to="yorumlar")
-
-    @property
-    def get_images(self):
-        return self.images.all()
-
-
 class Favoriler(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
@@ -146,6 +123,8 @@ class CreditCard(models.Model):
     expiration_date_month = models.CharField(max_length=2 ,default=1)
     expiration_date_year = models.CharField(max_length=2, default=24)
     cvv = models.CharField(max_length=3)
+    def __str__(self):
+        return self.card_number
 
 DURUM_CHOICES = (
     ('onay_bekliyor', 'Onay Bekliyor'),
@@ -169,6 +148,11 @@ class Siparis(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+STATUS = (
+        ('hazirlaniyor', 'hazirlaniyor'),
+        ('teslim_edildi', 'teslim_edildi'),
+    )
+
 class SiparisUrun(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     siparis = models.ForeignKey(Siparis, on_delete=models.CASCADE)
@@ -177,3 +161,21 @@ class SiparisUrun(models.Model):
     fiyat = MoneyField(max_digits=10, default_currency='TL')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+class Yorum(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    yorum_urun = models.ForeignKey(Urun, on_delete=models.CASCADE, default= 1)
+    text = models.TextField(max_length=300)
+    image = models.ImageField(upload_to='yorumlar', null=True)
+    create_at=models.DateTimeField(auto_now_add=True,null=True)
+    update_at=models.DateTimeField(auto_now=True, null=True)
+
+    @property
+    def urun_adi(self):
+        return(self.yorum_urun.name)
+    
+    @property
+    def username(self):
+        return(self.user.username)

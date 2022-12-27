@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import  UserChangeForm
 from django.contrib.auth.models import User
 from django.forms import EmailInput,ModelForm
-from main.models import Sepet, Adres, CreditCard, Siparis
+from main.models import Sepet, Adres, CreditCard, Siparis, Yorum
 
 
 class SepetForm(ModelForm):
@@ -33,3 +33,9 @@ class SiparisForm(ModelForm):
     class Meta:
         model = Siparis
         fields = ['first_name','last_name','telefon','adres','kredi_karti']
+
+
+class YorumForm(ModelForm):
+    class Meta:
+        model = Yorum
+        fields = ['text', 'image']

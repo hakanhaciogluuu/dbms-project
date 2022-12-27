@@ -1,13 +1,13 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard, Renk, Beden , Siparis, SiparisUrun
+from main.models import Category, Urun, UrunFotograf, Sepet, Favoriler, Adres, CreditCard, Yorum, Renk, Beden , Siparis, SiparisUrun
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm, SiparisForm
+from main.forms import UserUpdateForm, SepetForm, AddressForm, CreditCardForm, SiparisForm,YorumForm
 
 # Create your views here.
 
@@ -124,9 +124,11 @@ def urunler(request, slug):
 
 def urun_detay(request , slug):
     urun = Urun.objects.get(slug=slug)
+    yorumlar = Yorum.objects.filter(yorum_urun_id = urun.id)
     return render(request,"urun_detay.html",{
         "urun" : urun,
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.all(),
+        'yorumlar': yorumlar,
     })
 
 
@@ -379,10 +381,10 @@ def siparis(request):
             Sepet.objects.filter(user_id=current_user.id).delete() # Clear & Delete shopcart
             request.session['cart_items']=0
             messages.success(request, "Siparişiniz Verilmiştir.")
-            return render(request, '/sepet',{'category': category})
+            return render(request, 'index.html',{'category': category})
         else:
             messages.warning(request, form.errors)
-            return HttpResponseRedirect("/sepet")
+            return HttpResponseRedirect("/siparislerim")
 
     form= SiparisForm()
     context = {'sepet': sepet,
@@ -403,15 +405,58 @@ def siparislerim(request):
     return render(request, 'siparislerim.html', context)
 
 
+@login_required(login_url='/login') # Check login
+def siparis_detay(request,id):
+    category = Category.objects.all()
+    current_user = request.user
+    siparis = Siparis.objects.get(user_id=current_user.id, id=id)
+    siparisurun = SiparisUrun.objects.filter(siparis_id=id)
+    context = {
+        'category': category,
+        'siparis': siparis,
+        'siparisurun': siparisurun,
+    }
+    return render(request, 'siparis_detay.html', context)
 
+@login_required(login_url='/login')
+def yorum_ekle(request, urun_id):
+    urun = get_object_or_404(Urun, id=urun_id)
+    siparis_urun = get_object_or_404(SiparisUrun, urun=urun, user=request.user)
+    current_user = request.user
+    if not siparis_urun or siparis_urun.user_id != current_user.id:
+        messages.error(request, 'Bu ürünü sipariş etmeden yorum yapamazsınız.')
+        return redirect('urun_detay', urun.slug)
+    if request.method == 'POST':
+        form = YorumForm(request.POST)
+        if form.is_valid():
+            yorum = form.save(commit=False)
+            yorum.user = request.user
+            yorum.yorum_urun = urun
+            yorum.text = form.cleaned_data['text']
+            yorum.image = form.cleaned_data['image']
+            yorum.save()
+            messages.success(request, 'Yorumunuz başarıyla eklendi.')
+            return redirect('urun_detay', urun.slug)
+    else:
+        form = YorumForm()
 
+    return render(request, 'urun_detay.html', {'form': form, 'urun': urun, 'siparis_urun': siparis_urun ,'user': current_user})
 
+@login_required(login_url='/login') # Check login
+def yorumlar(request):
+    category = Category.objects.all()
+    current_user = request.user
+    yorumlar =Yorum.objects.filter(user_id=current_user.id)
+    context = {'category': category,
+               'yorumlar': yorumlar,
+               }
+    return render(request, 'yorumlar.html', context)
 
-
-
-
-
-
+@login_required(login_url='/login')
+def yorum_sil(request, id):
+    Yorum.objects.filter(id=id).delete()
+    messages.success(request, 'Yorum Silinmiştir.')
+    return HttpResponseRedirect("/yorumlar")
 
 
 

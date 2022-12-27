@@ -37,5 +37,9 @@ urlpatterns = [
     #######Siparis
     path('siparis/', views.siparis, name='siparis'),
     path('siparislerim/', views.siparislerim, name='siparislerim'),
-    
+    path('siparis_detay/<int:id>', views.siparis_detay, name='siparis_detay'),
+    #######Yorum
+    path('yorum_ekle/<int:urun_id>/', views.yorum_ekle, name='yorum_ekle'),
+    path('yorumlar', views.yorumlar, name='yorumlar'),
+    path('yorum_sil/<int:id>', views.yorum_sil, name='yorum_sil'),
 ]

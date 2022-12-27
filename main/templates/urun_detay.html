@@ -57,4 +57,28 @@
     </div>
 </div>
 
+{% if siparis_urun.urun == urun %}
+    <form method="POST" action="{% url 'yorum_ekle' urun.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Yorum Ekle" class="btn btn-primary">
+    </form>
+{% else %}
+    <p>Bu ürünü sipariş ettikten sonra yorum yapabilirsiniz.</p>
+{% endif %}
+
+{% if yorumlar %}
+{% for yorum in yorumlar %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ yorum.user.username }}</h5>
+            <p class="card-text">{{ yorum.text }}</p>
+            {% if yorum.image %}
+                <img src="{{ yorum.image.url }}" alt="">
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
+
 {% endblock %}

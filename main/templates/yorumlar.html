@@ -239,7 +239,7 @@ select.form-control {
 
 {% block title %}
 
-Siparişlerim
+Yorumlar
 {% endblock %}
 
 
@@ -263,23 +263,19 @@ Siparişlerim
       <table class="table">
           <thead>
               <tr>
-                  <th class="text-center">Ad</th>
-                  <th class="text-center">Soyad</th>
-                  <th class="text-center">Sipariş Tarihi</th>
-                  <th class="text-center">Toplam Tutar</th>
-                  <th class="text-center">Durum </th>
-                  <th class="text-center">Detay Görüntüle </th>
+                  <th class="text-center">Text</th>
+                  <th class="text-center">Ürün</th>
+                  <th class="text-center">Yorum Tarihi</th>
+                  <th class="text-center">Yorum'u sil</th>
               </tr>
           </thead>
           <tbody>
-            {% for  rs in siparisler  %}
+            {% for  rs in yorumlar  %}
               <tr>
-                <td class="text-center text-lg text-medium">{{rs.first_name}}</td>
-                <td class="text-center text-lg text-medium">{{rs.last_name}}</td>
-                <td class="text-center text-lg text-medium">{{rs.created_at}}</td>
-                <td class="text-center text-lg text-medium">{{rs.toplam_tutar}}</td>
-                <td class="text-center text-lg text-medium">{{rs.durum}}</td>
-                <td class="text-center text-lg text-medium"><a href = '/siparis_detay/{{ rs.id }}'><input type="submit" value="Detay" class="btn btn-primary"></a></td>
+                <td class="text-center text-lg text-medium">{{rs.text}}</td>
+                <td class="text-center text-lg text-medium">{{rs.yorum_urun}}</td>
+                <td class="text-center text-lg text-medium">{{rs.create_at}}</td>
+                <td class="text-center text-lg text-medium"><a href = '/yorum_sil/{{ rs.id }}'><input type="submit" value="Sil" class="btn btn-danger"></a></td>
               </tr>
               {% endfor  %}
           </tbody>
